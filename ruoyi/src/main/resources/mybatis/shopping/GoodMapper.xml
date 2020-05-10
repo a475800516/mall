@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.shopping.mapper.GoodMapper">
+    
+    <resultMap type="Good" id="GoodResult">
+        <result property="goodId"    column="good_id"    />
+        <result property="goodTypeId"    column="good_type_id"    />
+        <result property="goodName"    column="good_name"    />
+        <result property="price"    column="price"    />
+        <result property="sales"    column="sales"    />
+        <result property="summary"    column="summary"    />
+        <result property="pic"    column="pic"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectGoodVo">
+        select good_id, good_type_id, good_name, price, sales, summary, pic, create_by, create_time, update_by, update_time from good
+    </sql>
+
+    <select id="selectGoodList" parameterType="Good" resultMap="GoodResult">
+        <include refid="selectGoodVo"/>
+        <where>  
+            <if test="goodTypeId != null  and goodTypeId != ''"> and good_type_id = #{goodTypeId}</if>
+            <if test="goodName != null  and goodName != ''"> and good_name like concat('%', #{goodName}, '%')</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="sales != null "> and sales = #{sales}</if>
+            <if test="summary != null  and summary != ''"> and summary = #{summary}</if>
+            <if test="pic != null  and pic != ''"> and pic = #{pic}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodById" parameterType="Long" resultMap="GoodResult">
+        <include refid="selectGoodVo"/>
+        where good_id = #{goodId}
+    </select>
+        
+    <insert id="insertGood" parameterType="Good">
+        insert into good
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodId != null ">good_id,</if>
+            <if test="goodTypeId != null ">good_type_id,</if>
+            <if test="goodName != null  and goodName != ''">good_name,</if>
+            <if test="price != null ">price,</if>
+            <if test="sales != null ">sales,</if>
+            <if test="summary != null  and summary != ''">summary,</if>
+            <if test="pic != null  and pic != ''">pic,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodId != null ">#{goodId},</if>
+            <if test="goodTypeId != null ">#{goodTypeId},</if>
+            <if test="goodName != null  and goodName != ''">#{goodName},</if>
+            <if test="price != null ">#{price},</if>
+            <if test="sales != null ">#{sales},</if>
+            <if test="summary != null  and summary != ''">#{summary},</if>
+            <if test="pic != null  and pic != ''">#{pic},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGood" parameterType="Good">
+        update good
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodTypeId != null  and goodTypeId != ''">good_type_id = #{goodTypeId},</if>
+            <if test="goodName != null  and goodName != ''">good_name = #{goodName},</if>
+            <if test="price != null ">price = #{price},</if>
+            <if test="sales != null ">sales = #{sales},</if>
+            <if test="summary != null  and summary != ''">summary = #{summary},</if>
+            <if test="pic != null  and pic != ''">pic = #{pic},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where good_id = #{goodId}
+    </update>
+
+    <delete id="deleteGoodById" parameterType="Long">
+        delete from good where good_id = #{goodId}
+    </delete>
+
+    <delete id="deleteGoodByIds" parameterType="String">
+        delete from good where good_id in 
+        <foreach item="goodId" collection="array" open="(" separator="," close=")">
+            #{goodId}
+        </foreach>
+    </delete>
+    
+</mapper>

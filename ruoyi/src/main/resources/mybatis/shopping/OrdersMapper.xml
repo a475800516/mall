@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.shopping.mapper.OrdersMapper">
+    
+    <resultMap type="Orders" id="OrdersResult">
+        <result property="ordersId"    column="orders_id"    />
+        <result property="priceSum"    column="price_sum"    />
+        <result property="status"    column="status"    />
+        <result property="payQrCode"    column="pay_qr_code"    />
+        <result property="freight"    column="freight"    />
+        <result property="remark"    column="remark"    />
+        <result property="buyerId"    column="buyer_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <resultMap type="com.ruoyi.project.shopping.po.MyOrders" id="MyOrdersResult">
+        <result property="ordersId"    column="orders_id"    />
+        <result property="priceSum"    column="price_sum"    />
+        <result property="status"    column="status"    />
+        <result property="freight"    column="freight"    />
+        <result property="buyerId"    column="buyer_id"    />
+        <result property="buyerName"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="goodId"    column="good_id"    />
+        <result property="goodName"    column="good_name"    />
+        <result property="price"    column="price"    />
+        <result property="num"    column="num"    />
+    </resultMap>
+
+    <sql id="selectOrdersVo">
+        select orders_id, price_sum, status, pay_qr_code, freight, remark, buyer_id, create_by, create_time, update_by, update_time from orders
+    </sql>
+
+
+    <select id="selectOrdersList" parameterType="Orders" resultMap="OrdersResult">
+        <include refid="selectOrdersVo"/>
+        <where>
+            <if test="priceSum != null "> and price_sum = #{priceSum}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+            <if test="buyerId != null  and buyerId != ''"> and buyer_id = #{buyerId}</if>
+        </where>
+    </select>
+
+    <select id="selectMyOrdersList" parameterType="Long" resultMap="MyOrdersResult">
+        select
+          o.orders_id, o.price_sum, o.status, o.buyer_id, o.create_by, o.create_time, o.freight,
+          g.good_id, g.good_name, g.price, og.num
+        from orders o, orders_good og, good g
+        where o.orders_id = og.orders_id
+          and og.good_id = g.good_id
+          and o.buyer_id = #{buyerId}
+    </select>
+    
+    <select id="selectOrdersById" parameterType="Long" resultMap="OrdersResult">
+        <include refid="selectOrdersVo"/>
+        where orders_id = #{ordersId}
+    </select>
+        
+    <insert id="insertOrders" parameterType="Orders" useGeneratedKeys="true" keyProperty="ordersId">
+        insert into orders
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ordersId != null and ordersId != ''">orders_id,</if>
+            <if test="priceSum != null ">price_sum,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="payQrCode != null  and payQrCode != ''">pay_qr_code,</if>
+            <if test="freight != null">freight,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="buyerId != null  and buyerId != ''">buyer_id,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ordersId != null and ordersId != ''">#{ordersId},</if>
+            <if test="priceSum != null ">#{priceSum},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="payQrCode != null  and payQrCode != ''">#{payQrCode},</if>
+            <if test="freight != null">#{freight},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="buyerId != null  and buyerId != ''">#{buyerId},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            sysdate()
+         </trim>
+    </insert>
+
+    <update id="updateOrders" parameterType="Orders">
+        update orders
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="priceSum != null ">price_sum = #{priceSum},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="payQrCode != null  and payQrCode != ''">pay_qr_code = #{payQrCode},</if>
+            <if test="freight != null">freight = #{freight},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="buyerId != null  and buyerId != ''">buyer_id = #{buyerId},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where orders_id = #{ordersId}
+    </update>
+
+    <delete id="deleteOrdersById" parameterType="Long">
+        delete from orders where orders_id = #{ordersId}
+    </delete>
+
+    <delete id="deleteOrdersByIds" parameterType="String">
+        delete from orders where orders_id in 
+        <foreach item="ordersId" collection="array" open="(" separator="," close=")">
+            #{ordersId}
+        </foreach>
+    </delete>
+    
+</mapper>

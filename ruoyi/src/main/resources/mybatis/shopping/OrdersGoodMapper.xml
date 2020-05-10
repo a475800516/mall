@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.shopping.mapper.OrdersGoodMapper">
+    
+    <resultMap type="OrdersGood" id="OrdersGoodResult">
+        <result property="ordersId"    column="orders_id"    />
+        <result property="goodId"    column="good_id"    />
+        <result property="num"    column="num"    />
+    </resultMap>
+
+    <sql id="selectOrdersGoodVo">
+        select orders_id, good_id, num from orders_good
+    </sql>
+
+    <select id="selectOrdersGoodList" parameterType="OrdersGood" resultMap="OrdersGoodResult">
+        <include refid="selectOrdersGoodVo"/>
+        <where>  
+            <if test="ordersId != null "> and orders_id = #{ordersId}</if>
+            <if test="goodId != null "> and good_id = #{goodId}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrdersGoodById" parameterType="Long" resultMap="OrdersGoodResult">
+        <include refid="selectOrdersGoodVo"/>
+        where orders_id = #{ordersId}
+    </select>
+        
+    <insert id="insertOrdersGood" parameterType="OrdersGood">
+        insert into orders_good
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ordersId != null ">orders_id,</if>
+            <if test="goodId != null ">good_id,</if>
+            <if test="num != null ">num,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ordersId != null ">#{ordersId},</if>
+            <if test="goodId != null ">#{goodId},</if>
+            <if test="num != null ">#{num},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrdersGood" parameterType="OrdersGood">
+        update orders_good
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodId != null ">good_id = #{goodId},</if>
+            <if test="num != null ">num = #{num},</if>
+        </trim>
+        where orders_id = #{ordersId}
+    </update>
+
+    <delete id="deleteOrdersGoodById" parameterType="Long">
+        delete from orders_good where orders_id = #{ordersId}
+    </delete>
+
+    <delete id="deleteOrdersGoodByIds" parameterType="String">
+        delete from orders_good where orders_id in
+        <foreach item="ordersId" collection="array" open="(" separator="," close=")">
+            #{ordersId}
+        </foreach>
+    </delete>
+    
+</mapper>
