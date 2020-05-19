@@ -56,7 +56,7 @@ export function uploadImage(data) {
 // 下单
 export function placeAnOrder(goodId) {
   return request({
-    url: '/shopping/orders/placeAnOrder' + goodId,
+    url: '/shopping/orders/placeAnOrder?goodId=' + goodId,
     method: 'get'
   })
 }

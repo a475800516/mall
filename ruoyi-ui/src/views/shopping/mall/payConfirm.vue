@@ -1,7 +1,8 @@
 <template>
   <div>
     <headerBar :headerBar="headerBar"/>
-
+    <!-- 弹框遮罩层 -->
+    <div class="sui-modal-backdrop fade in" style="background:#000" v-if="showRecevingAddress"></div>
     <div class="content content-nav-base commodity-content">
       <div class="commod-cont-wrap">
 
@@ -13,7 +14,7 @@
             <div class="checkout-steps">
               <!--收件人信息-->
               <div class="step-tit">
-                <h5>收件人信息<span><a data-toggle="modal" data-target=".edit" data-keyboard="false" class="newadd">新增收货地址</a></span></h5>
+                <h5>收件人信息<span><a data-toggle="modal" data-target=".edit" data-keyboard="false" class="newadd" @click="addRecevingAddress">新增收货地址</a></span></h5>
               </div>
               <div class="step-cont">
                 <div class="addressInfo">
@@ -31,11 +32,11 @@
                     </li>
                   </ul>
                   <!--添加地址-->
-                  <div  tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade edit">
+                  <div  tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade edit in" style="margin-top: -210px; display: block;"  v-if="showRecevingAddress">
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
+                          <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close" @click="hideRecevingAddress">×</button>
                           <h4 id="myModalLabel" class="modal-title">添加收货地址</h4>
                         </div>
                         <div class="modal-body">
@@ -77,8 +78,8 @@
                           </form>
                         </div>
                         <div class="modal-footer">
-                          <button type="button" data-ok="modal" class="sui-btn btn-primary btn-large">确定</button>
-                          <button type="button" data-dismiss="modal" class="sui-btn btn-default btn-large">取消</button>
+                          <button type="button" data-ok="modal" class="sui-btn btn-primary btn-large" @click="hideRecevingAddress">确定</button>
+                          <button type="button" data-dismiss="modal" class="sui-btn btn-default btn-large" @click="hideRecevingAddress">取消</button>
                         </div>
                       </div>
                     </div>
@@ -123,6 +124,7 @@ export default {
     return {
       addressList:[],
       selectedAddress: {},
+      showRecevingAddress: false
     };
   },
   created() {
@@ -164,6 +166,12 @@ export default {
               this.showQrcode(qrcode);
           });
       }*/
+      addRecevingAddress(){
+          this.showRecevingAddress = true;
+      },
+      hideRecevingAddress(){
+          this.showRecevingAddress = false;
+      }
   }
 };
 </script>

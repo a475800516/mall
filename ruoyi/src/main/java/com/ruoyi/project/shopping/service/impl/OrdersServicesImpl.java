@@ -104,7 +104,7 @@ public class OrdersServicesImpl implements IOrdersService
         ordersGood.setGoodId(goodId);
         ordersGood.setNum(1);
         ordersGoodMapper.insertOrdersGood(ordersGood);
-        return AjaxResult.success(qrCode);
+        return AjaxResult.success(ordersId);
     }
 
     /**

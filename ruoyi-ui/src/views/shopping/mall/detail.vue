@@ -149,7 +149,7 @@ export default {
       payNow(){
           const goodId = this.$route.params && this.$route.params.goodId;
           placeAnOrder(goodId).then(response => {
-              window.location.href = "../pay/" + goodId;
+              window.location.href = "../pay/" + response.msg;
           });
       }
   }
